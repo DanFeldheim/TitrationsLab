@@ -46,7 +46,7 @@ class titrate:
         self.style = ttk.Style(master)
         self.style.configure("TButton", font = ('times', 18), foreground = "red", highlightbackground = 'red')
         
-        
+        #---------------------------------------------------------
         # Create entries for student id
         # self.id_Label = ttk.Label(self.id, text = 'Enter Student Identifiers', background = 'blue', foreground = "blue", 
             # relief = RAISED, anchor = CENTER, width = 25,font = self.font1).grid(row = 0, column = 0, padx = 5, pady = (15, 5), sticky = 'e')
@@ -71,6 +71,7 @@ class titrate:
         self.student_id_label.grid(row = 2, column = 0, pady = (10, 5), columnspan = 1)
         self.student_id_entry.grid(row = 3, column = 0, pady = (1, 5), columnspan = 1)
         self.student_id.set('Student ID') 
+        #-----------------------------------------------------------
         
         
         # Create labels for standardization of NaOH table
@@ -104,51 +105,93 @@ class titrate:
         # would trigger the error message to enter the number to 2 decimal places.
         
         self.mass1 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.mass1, width = 6)
-        self.import_entry.grid(row = 1, column = 1, pady = (15, 5))
+        self.mass1_entry = ttk.Entry(self.naoh, textvariable = self.mass1, width = 6)
+        self.mass1_entry.grid(row = 1, column = 1, pady = (15, 5))
         self.mass1.set('3.02')
         
         self.mass2 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.mass2, width = 6)
-        self.import_entry.grid(row = 1, column = 2, pady = (15, 5))
+        self.mass2_entry = ttk.Entry(self.naoh, textvariable = self.mass2, width = 6)
+        self.mass2_entry.grid(row = 1, column = 2, pady = (15, 5))
         self.mass2.set('6.05')
         
         self.mass3 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.mass3, width = 6)
-        self.import_entry.grid(row = 1, column = 3, pady = (15, 5))
+        self.mass3_entry = ttk.Entry(self.naoh, textvariable = self.mass3, width = 6)
+        self.mass3_entry.grid(row = 1, column = 3, pady = (15, 5))
         self.mass3.set('9.16')
         
         self.init_vol1 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.init_vol1, width = 6)
-        self.import_entry.grid(row = 2, column = 1, pady = (15, 5))
+        self.init_vol1_entry = ttk.Entry(self.naoh, textvariable = self.init_vol1, width = 6)
+        self.init_vol1_entry.grid(row = 2, column = 1, pady = (15, 5))
         self.init_vol1.set('1.11')
         
         self.init_vol2 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.init_vol2, width = 6)
-        self.import_entry.grid(row = 2, column = 2, pady = (15, 5))
+        self.init_vol2_entry = ttk.Entry(self.naoh, textvariable = self.init_vol2, width = 6)
+        self.init_vol2_entry.grid(row = 2, column = 2, pady = (15, 5))
         self.init_vol2.set('1.22')
         
         self.init_vol3 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.init_vol1, width = 6)
-        self.import_entry.grid(row = 2, column = 3, pady = (15, 5))
+        self.init_vol3_entry = ttk.Entry(self.naoh, textvariable = self.init_vol1, width = 6)
+        self.init_vol3_entry.grid(row = 2, column = 3, pady = (15, 5))
         self.init_vol3.set('1.53')
         
         self.final_vol1 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.final_vol1, width = 6)
-        self.import_entry.grid(row = 3, column = 1, pady = (15, 5))
+        self.final_vol1_entry = ttk.Entry(self.naoh, textvariable = self.final_vol1, width = 6)
+        self.final_vol1_entry.grid(row = 3, column = 1, pady = (15, 5))
         self.final_vol1.set('1.63')
         
         self.final_vol2 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.final_vol2, width = 6)
-        self.import_entry.grid(row = 3, column = 2, pady = (15, 5))
+        self.final_vol2_entry = ttk.Entry(self.naoh, textvariable = self.final_vol2, width = 6)
+        self.final_vol2_entry.grid(row = 3, column = 2, pady = (15, 5))
         self.final_vol2.set('2.57')
         
         self.final_vol3 = StringVar()
-        self.import_entry = ttk.Entry(self.naoh, textvariable = self.final_vol3, width = 6)
-        self.import_entry.grid(row = 3, column = 3, pady = (15, 5))
+        self.final_vol3_entry = ttk.Entry(self.naoh, textvariable = self.final_vol3, width = 6)
+        self.final_vol3_entry.grid(row = 3, column = 3, pady = (15, 5))
         self.final_vol3.set('2.2')
+        #--------------------------------------------------------
+        # Unknown Acid Titration tab
         
+        # Create label for the Unknown Acid Titration tab
+        self.unknown_Label = ttk.Label(self.unknown, text = 'Quick Trial (Color End Point)', background = 'blue', foreground = "blue", 
+            relief = RAISED, anchor = CENTER, width = 30,font = self.font1).grid(row = 0, column = 0, columnspan = 2, padx = 5, pady = (1, 5))
+            
+        # Create entry boxes
+        self.vol_acid = StringVar()
+        self.vol_acid_label = ttk.Label(self.unknown, text = 'Enter volume of acid titrated (mL)', background = 'blue', foreground = "blue", relief = RAISED, 
+            anchor = CENTER, width = 30, font = self.font2)
+        self.vol_acid_label.grid(row = 1, column = 0, pady = (1, 5))
+        self.vol_acid_entry = ttk.Entry(self.unknown, textvariable = self.vol_acid, width = 6)
+        self.vol_acid_entry.grid(row = 2, column = 0, pady = (1, 5))
+        self.vol_acid.set('33.02')
         
+        # Create pull down menu for unknown acid
+        self.unk = StringVar()
+        self.unk_label = ttk.Label(self.unknown, text = 'Unknown Acid:', background = 'blue', foreground = "blue", 
+            relief = RAISED, anchor = CENTER, width = 15, font = self.font2)
+        self.unk_label.grid(row = 3, column = 0, pady = (1, 5), padx = 3)
+        self.unk_box = ttk.Combobox(self.unknown, textvariable = self.unk, width = 12, font = self.font2)
+        self.unk_box.config(values = ('A', 'B', 'C', 'D', 'E', 'F'))
+        self.unk_box.grid(row = 4, column = 0, pady = (1, 5), padx = 3)
+
+        self.init_buret = StringVar()
+        self.init_buret_label = ttk.Label(self.unknown, text = 'Enter initial buret reading (mL)', background = 'blue', foreground = "blue", relief = RAISED, 
+            anchor = CENTER, width = 30, font = self.font2)
+        self.init_buret_label.grid(row = 5, column = 0, pady = (1, 5))
+        self.init_buret_entry = ttk.Entry(self.unknown, textvariable = self.init_buret, width = 6)
+        self.init_buret_entry.grid(row = 6, column = 0, pady = (1, 5))
+        self.init_buret.set('50.00')
+        
+        self.final_buret = StringVar()
+        self.final_buret_label = ttk.Label(self.unknown, text = 'Enter final buret reading at color change (mL)', background = 'blue', foreground = "blue", relief = RAISED, 
+            anchor = CENTER, width = 38, font = self.font2)
+        self.final_buret_label.grid(row = 7, column = 0, pady = (1, 5))
+        self.final_buret_entry = ttk.Entry(self.unknown, textvariable = self.final_buret, width = 6)
+        self.final_buret_entry.grid(row = 8, column = 0, pady = (1, 5))
+        self.final_buret.set('20.00')
+        
+            
+        
+        #--------------------------------------------------------
         # Calculations tab
     
         # Create label for standardization of NaOH calculations
