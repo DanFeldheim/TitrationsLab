@@ -130,7 +130,7 @@ class titrate:
         self.init_vol2.set('1.22')
         
         self.init_vol3 = StringVar()
-        self.init_vol3_entry = ttk.Entry(self.naoh, textvariable = self.init_vol1, width = 6)
+        self.init_vol3_entry = ttk.Entry(self.naoh, textvariable = self.init_vol3, width = 6)
         self.init_vol3_entry.grid(row = 2, column = 3, pady = (15, 5))
         self.init_vol3.set('1.53')
         
@@ -147,7 +147,9 @@ class titrate:
         self.final_vol3 = StringVar()
         self.final_vol3_entry = ttk.Entry(self.naoh, textvariable = self.final_vol3, width = 6)
         self.final_vol3_entry.grid(row = 3, column = 3, pady = (15, 5))
-        self.final_vol3.set('2.2')
+        self.final_vol3.set('2.23')
+        
+        
         #--------------------------------------------------------
         # Unknown Acid Titration tab
         
@@ -189,8 +191,6 @@ class titrate:
         self.final_buret_entry.grid(row = 8, column = 0, pady = (1, 5))
         self.final_buret.set('20.00')
         
-            
-        
         #--------------------------------------------------------
         # Calculations tab
     
@@ -225,7 +225,7 @@ class titrate:
         self.M3_entry.grid(row = 3, column = 2, pady = (1, 5))
         self.M3.set('4.76')      
         
-         # Create entry boxes for NaOH molarities
+        # Create entry boxes for NaOH molarities
         self.Na1 = StringVar()
         self.Na1_label = ttk.Label(self.calcs, text = 'NaOH:', background = 'blue', foreground = "blue", relief = RAISED, anchor = CENTER, width = 6, font = self.font2)
         self.Na1_entry = ttk.Entry(self.calcs, width = 4, textvariable = self.Na1)
@@ -245,7 +245,6 @@ class titrate:
         
         
         # Enter boxes for average khp moles and NaOH molarity
-        
         self.avg = StringVar()
         self.avg_label1 = ttk.Label(self.calcs, text = 'Enter Average Moles KHP and NaOH Molarity', background = 'blue', foreground = "blue", relief = RAISED, anchor = CENTER, width = 40, font = self.font2)
         self.avg_label2 = ttk.Label(self.calcs, text = 'KHP:', background = 'blue', foreground = "blue", relief = RAISED, anchor = CENTER, width = 6, font = self.font2)
@@ -264,14 +263,19 @@ class titrate:
         
         
         # Create button that calls function for selecting files for analysis
-        self.openFileButton = ttk.Button(self.calcs, text = 'Submit for Grading', style = "TButton", command = lambda: self.get_naoh_molarity_values())
+        self.openFileButton = ttk.Button(self.calcs, text = 'Submit for Grading', style = "TButton", command = lambda: self.get_values())
         self.openFileButton.grid(row = 10, column = 1, pady = (1, 5))
 
             
-    # Function to calculate molarity of NaOH in the standardization of NaOH experiment
-    def get_naoh_molarity_values(self):
+    # Function to retrieve all values entered by student
+    def get_values(self):
+        
+        # From unknown tab
+        self.acid = self.vol_acid.get()
+        self.buret1 = self.init_buret.get()
+        self.buret2 = self.final_buret.get()
             
-        # Get data from trial 1-3 entry boxes
+        # From NaOH tab
         self.mass_khp1 = self.mass1.get()
         self.mass_khp2 = self.mass2.get()
         self.mass_khp3 = self.mass3.get()
@@ -284,33 +288,47 @@ class titrate:
         self.vf2 = self.final_vol2.get()
         self.vf3 = self.final_vol3.get()
                 
-        self.average = self.avg.get()
-            
-        self.molarity1 = self.M1.get()
-        self.molarity2 = self.M2.get()
-        self.molarity3 = self.M3.get()
-        self.avg_molarity = self.avg.get()
-            
+        # From calculations tab
+        self.khp_moles1 = self.M1.get()
+        self.khp_moles2 = self.M2.get()
+        self.khp_moles3 = self.M3.get()
+        self.naoh_molarity1 = self.Na1.get()
+        self.naoh_molarity2 = self.Na2.get()
+        self.naoh_molarity3 = self.Na3.get()
+        self.khp_average = self.avg.get()
+        self.naoh_avg = self.naavg.get()
+        
             
         # Check that all values are entered and are out to 2 decimal places
+        # If NA was entered, delete it
+        
         # Place all values in a list
-        values_list = [self.mass_khp1, self.mass_khp2, self.mass_khp3, self.vi1, self.vi2, self.vi3, 
-            self.vf1, self.vf2, self.vf3, self.average, self.molarity1, self.molarity2, self.molarity3,
-            self.avg_molarity]
+        self.values_list = [self.acid, self.buret1, self.buret2, self.mass_khp1, self.mass_khp2, self.mass_khp3, self.vi1, self.vi2, self.vi3, 
+            self.vf1, self.vf2, self.vf3, self.khp_moles1, self.khp_moles2,self.khp_moles3, self.khp_average, self.naoh_molarity1, self.naoh_molarity2, self.naoh_molarity3,
+            self.naoh_molarity1, self.naoh_avg]
+            
+        # print(self.values_list)
+        # print('')
                 
-        # Loop through list, convert to string, split the string around the decimal pt, and check for length
+        # If NA in list, delete it
+        while 'NA' in self.values_list: self.values_list.remove('NA') 
+        
+        # print(self.values_list)
+        # print('')
+        
+        # Loop through list, split the string around the decimal pt, and check for length
         # Start a list for yes/no depending on whether each value was entered correctly
-        correct_list = []
-        for val in values_list:
-            y = str(val).split('.')
+        self.correct_list = []
+        for val in self.values_list:
+            y = val.split('.')
             if len(y[-1]) != 2:
-                correct_list.append('no')
+                self.correct_list.append('no')
                     
             else:
-                correct_list.append('yes')
+                self.correct_list.append('yes')
                     
         # If list contains a no, go to error message
-        if 'no' in correct_list:
+        if 'no' in self.correct_list:
             self.sigfig_error()
             
         else:
@@ -320,15 +338,25 @@ class titrate:
     # Calculate average molarity based upon the khp masses and volumes entered in standardization of NaOH tab
     def calc_naoh_molarity(self):
 
-        # Create lists for values so calculation can be run in a loop
-        # Convert each element to float for calculations below
-        self.mass_khp_list = [float(self.mass_khp1), float(self.mass_khp2), float(self.mass_khp3)]
-        self.vi_list = [float(self.vi1), float(self.vi2), float(self.vi3)]
-        self.vf_list = [float(self.vf1), float(self.vf2), float(self.vf3)]
+        # Create list of lists for values 
+        
+        self.mass_khp_list = [self.mass_khp1, self.mass_khp2, self.mass_khp3]
+        self.vi_list = [self.vi1, self.vi2, self.vi3]
+        self.vf_list = [self.vf1, self.vf2, self.vf3]
+        
+        # Remove all NA from all lists
+        while 'NA' in self.mass_khp_list: self.mass_khp_list.remove('NA') 
+        while 'NA' in self.vi_list: self.vi_list.remove('NA')
+        while 'NA' in self.vf_list: self.vf_list.remove('NA')
+        
+        # Convert all values to float
+        self.mass_khp_list = [float(i) for i in self.mass_khp_list]
+        self.vi_list = [float(i) for i in self.vi_list]  
+        self.vf_list = [float(i) for i in self.vf_list]
         
         # Loop through lists to calculate moles of khp and molarity of NaOH
         # Create lists for results
-        
+            
         self.moles_khp_list = []
         self.molarity_naoh = []
         
@@ -425,7 +453,7 @@ class titrate:
        
     def sigfig_error(self):
         
-        messagebox.showinfo('Message', 'Please fill in all entry boxes and make sure that all numbers are out to two decimal places.')
+        messagebox.showinfo('Message', 'Please fill in all entry boxes and make sure that all numbers are out to two decimal places. If you do not have a number to enter, type NA.')
                         
             
         
