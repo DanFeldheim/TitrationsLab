@@ -354,13 +354,18 @@ class titrate:
         self.avg_pka.set('4.61') 
         
         
-        # Create button that calls function for selecting files for analysis
+        # Create button that runs program
         self.openFileButton = ttk.Button(self.calcs, text = 'Submit for Grading', style = "TButton", command = lambda: self.get_values())
         self.openFileButton.grid(row = 20, column = 1, pady = (25, 5))
-
-            
+         
+        # Start a counter for the number of times the submit button is presses
+        self.submit_counter = 0    
+    
     # Function to retrieve all values entered by student
     def get_values(self):
+        
+        # Increase counter
+        self.submit_counter += 1
         
         # From unknown tab
         self.acid = self.vol_acid.get()
@@ -562,16 +567,50 @@ class titrate:
     # Formula: pKa = pH - log [B]/[A]
     # pH = self.quarter_Veq_pH, self.half_Veq_pH, and self.threeQuart_Veq_pH 
     def pka_calcs(self):
-        self.pK1 = float(self.quarter_Veq_pH) + 0.477
-        self.pK2 = float(self.half_Veq_pH)
-        self.pK3 = float(self.threeQuart_Veq_pH) - 0.477
-    
+        
+        # Create a list for pK values so that average pKa can be calculated based upon the 
+        # number of pKa values provided by student. 
+        
+        self.pKa_list = []
+        
+        if self.quarter_Veq_pH != 'NA':
+            self.pK1 = float(self.quarter_Veq_pH) + 0.477
+            self.pKa_list.append(self.pK1)
+            
+        else:
+            self.pK1 = 'NA'
+            print('pKa 1/4 Veq not entered.')
+            print('')
+            
+        if self.half_Veq_pH != 'NA':
+            self.pK2 = float(self.half_Veq_pH)
+            self.pKa_list.append(self.pK2)
+        
+        else:
+            self.pK2 = 'NA'
+            print('pKa 1/2 Veq not entered.')
+            print('')
+                  
+        if self.threeQuart_Veq_pH != 'NA':
+            self.pK3 = float(self.threeQuart_Veq_pH) - 0.477
+            self.pKa_list.append(self.pK3)
+            
+        else:
+            self.pK3 = 'NA'
+            print('pKa 3/4 Veq not entered.')
+            print('')
         
         print ('pK 1/4 Veq = ' + str(self.pK1))
         print ('')
         print ('pK 1/2 Veq = ' + str(self.pK2))
         print ('')
         print ('pK 3/4 Veq = ' + str(self.pK3))
+        print ('') 
+        
+        # Calculate average pKa from pKa_list
+        self.pKa_avg = sum(self.pKa_list)/len(self.pKa_list)
+        
+        print ('Average pKa = ' + str(self.pKa_avg))
         print ('')
         
         self.naoh_score()
@@ -644,7 +683,11 @@ class titrate:
             
             # Popup message for the number of points earned
             messagebox.showinfo('Message', 'You earned ' + str(self.total_pts) + ' out of 12 points on the Titrations Lab!')
-        
+            
+            # Call function to check number of times student has pressed submit button
+            self.check_submits()    
+            
+            
         except ValueError:
             
             print('NA entered for average NaOH molarity')
@@ -653,7 +696,12 @@ class titrate:
             self.no_average_entered()
             
     
-        
+    def check_submits(self):
+        if self.submit_counter == 3:
+            
+            # Lay a button to nowhere over the submit button
+            self.openFileButton = ttk.Button(self.calcs, text = 'Number of submission exceeded.', style = "TButton")
+            self.openFileButton.grid(row = 20, column = 1, pady = (25, 5))
     
  
     
