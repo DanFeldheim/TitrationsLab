@@ -351,7 +351,8 @@ class titrate:
         # Start a counter for the number of times the submit button is presses
         self.submit_counter = 0    
     
-    # Function to retrieve all values entered by student
+# Function to retrieve all values entered by student and check that they were entered to the correct number of sig figs
+
     def get_values(self):
         
         # Increase counter
@@ -396,9 +397,7 @@ class titrate:
         self.average_pka = self.avg_pka.get()
         
         
-        # Check that all values are entered and are out to 2 decimal places
-        # If NA was entered, delete it
-        
+        # Check that all values are entered and are out to the correct number of decimal places
         # Place all values that go out two decimals places in a list 
         self.two_decimals_list = [self.acid, self.buret1, self.buret2, self.quarter_Veq_pH, self.half_Veq_pH, 
             self.threeQuart_Veq_pH, self.vi1, self.vi2, self.vi3, self.vf1, self.vf2, self.vf3, self.quarter_pt, 
@@ -452,7 +451,11 @@ class titrate:
         else:
             self.calc_moles_khp()
             
-        
+ 
+# Functions to calculate correct answers based upon raw data entered by students
+   
+    # Moles khp based upon masses entered by students
+    
     # Calculate average moles based upon the khp masses entered in standardization of NaOH tab
     # Strategy for dealing with NA: Convert NA to float -999.99 and perform moles calculation. Then delete
     # negative moles, and calculate average moles with remaining numbers.
@@ -497,6 +500,7 @@ class titrate:
         
         
     # Function to calculate NaOH molarity
+    
     # Use same strategy as above for dealing with NA
     # The strategy is particularly important here as elements in each list must be kept aligned.
     # That is, vf1 must be subtracted from vi1. Simply removing NAs rather than replacing with a 
@@ -557,6 +561,7 @@ class titrate:
         
         
     # Calculations for unknown acid titration
+    
     # Acid molarity
     def acid_molarity_calc(self):
         
@@ -565,17 +570,23 @@ class titrate:
         # To base this on the student's naoh molarity use float(self.naavg.get() in place of self.avg_naoh_molarity
         
         # Make sure a numbers were entered for self.buret 1 and 2, and self.naavg
+        try:
+            self.buret1 and self.buret2 and self.naavg
+            self.acid_mols = (float(self.buret2) - float(self.buret1) * float(self.naavg.get()) * 0.001)
+            print ('acid mols = ' + str(self.acid_mols))
+            print ('')
+            
+            self.acid_molarity = float(self.acid_mols)/float(self.acid)
+            print('acid Molarity = ' + str(self.acid_molarity))   
+            print('')
         
-        self.acid_mols = (float(self.buret2) - float(self.buret1) * float(self.naavg.get()) * 0.001)
-        print ('acid mols = ' + str(self.acid_mols))
-        print ('')
-        
-        self.acid_molarity = float(self.acid_mols)/float(self.acid)
-        print('acid Molarity = ' + str(self.acid_molarity))   
-        print('')
-    
-        # Call grading functions
-        self.pka_calcs()
+            # Call grading functions
+            self.pka_calcs()
+            
+        except ValueError:
+            print ('NA entered for self.naavg')
+            self.no_average_entered()
+            self.naoh_score()
         
         
     # pKa
@@ -625,14 +636,74 @@ class titrate:
         # Calculate average pKa from pKa_list
         self.pKa_avg = sum(self.pKa_list)/len(self.pKa_list)
         
-        print ('Average pKa = ' + str(self.pKa_avg))
-        print ('')
+        # Append average to pK list
+        self.pKa_list.append(self.pKa_avg)
+        
+        # Round values to 2 decimal places
+        self.rounded_pKa_list = [round(i, 2) for i in self.pKa_list]
+        
+        self.pKa_score()
+        
+# Scoring functions
+
+    # Function to calculate points for student pKa values
+    
+    def pKa_score(self):
+        # Build a list of pKa values entered by student
+        self.student_pKa_list = [self.quarter_pt, self.half_pt, self.three_pt, self.average_pka]
+        print ('Student pK list: ' + str(self.student_pKa_list))
+        print('')    
+        
+        # Convert NA to -999.99. This is necessary in case a student entered NA in any of the pK boxes. 
+        # The -999.99 keeps the lists the same length.
+        self.student_pKa_replaced = map(lambda x: str.replace(x, 'NA', '-999.99'), self.student_pKa_list)
+        
+        print ('Student pKa replaced: ' + str(self.student_pKa_replaced))
+        print('')    
+        
+        # Award 2 points for a each correct response
+        # Pop up message if incorrect so they can try again
+            
+        # Start counter for khp points
+        self.pK_pts = 0
+        
+        for student_pK, correct_pK in zip(self.student_pKa_replaced, self.rounded_pKa_list):
+            
+            print('rounded pKa list: ' + str(self.rounded_pKa_list))
+            print('')
+            print('student pKa: ' + str(self.student_pKa_replaced))
+            print('')
+            
+            # Convert student_pK to float
+            student_pK = float(student_pK)
+            
+            # If self.student_pK_replaced has -999.99 it in, move on
+            if student_pK == -999.99:
+                
+                print('Oops, this pKa answer was not submitted!')
+                
+                
+            else:
+                
+                # Set upper and lower limits for correct answer
+                self.upper_pK = round(correct_pK + 0.02 * correct_pK, 2)
+                self.lower_pK = round(correct_pK - 0.02 * correct_pK, 2)
+                
+                print('upper correct pK: ' + str(self.upper_pK))
+                print('')
+                print('lower correct_pK: ' + str(self.lower_pK))
+                print('')
+                
+                if self.upper_pK >= student_pK >= self.lower_pK:
+                    self.pK_pts += 2
+                        
+                else:
+                    self.check_pK_answer()
+            
         
         self.naoh_score()
         
-        
- # Scoring functions
-   
+
     # Define a function that assigns points based upon correct calculation of moles khp and 
     # NaOH molarity entered
     # A correct response is one that is within 2% of the correct answer 
@@ -668,7 +739,7 @@ class titrate:
             # If self.student_moles_khp_replaced has -999.99 it in, move on
             if student_moles_khp == -999.99:
                 print('Oops, this answer was not submitted!')
-                self.no_average_entered()
+                
                 
             else:
                 
@@ -687,14 +758,13 @@ class titrate:
                         
                 else:
                     self.check_khp_answer()
-                    break
-                
-        print ('khp points = ' + str(self.khp_pts))
-        print('')
-            
+                    # break
         
     # Repeat for naoh
     
+        # Start counter for NaOH points
+        self.naoh_points = 0
+        
         try:
             
             self.student_naoh = float(self.naavg.get())
@@ -708,34 +778,38 @@ class titrate:
             # Award 6 points for a correct response, 1 point for incorrect response
             if self.lower_naoh < self.student_naoh < self.upper_naoh:
                 self.naoh_points = 6
-                
-            else:
-                self.check_naoh_answer()
-                
-                
-            print ('NaOH points = ' + str(self.naoh_points))
-            print('')
-            
-            # Calculate total points
-            self.total_pts = self.khp_pts + self.naoh_points
-            
-            # Popup message for the number of points earned
-            messagebox.showinfo('Message', 'You earned ' + str(self.total_pts) + ' out of 12 points on the Titrations Lab!')
-            
-            # Call function to check number of times student has pressed submit button
-            self.check_submits()    
-            
-            
+                     
         except ValueError:
             
             print('NA entered for average NaOH molarity')
             
-            # Call message box
-            self.no_average_entered()
+        self.calculate_pts()
+        
+  
+# Function to add up all of the points
+          
+    def calculate_pts(self):
+        
+        print ('khp points = ' + str(self.khp_pts))
+        print('')
+        
+        print ('NaOH points = ' + str(self.naoh_points))
+        print('')
+        
+        print ('pKa points = ' + str(self.pK_pts))
+        print('')
             
-    
+        # Calculate total points
+        self.total_pts = self.khp_pts + self.naoh_points + self.pK_pts
+            
+        # Popup message for the number of points earned
+        messagebox.showinfo('Message', 'You earned ' + str(self.total_pts) + ' out of 20 points on the Titrations Lab!')
+            
+        # Call function to check number of times student has pressed submit button
+        self.check_submits()    
+            
     def check_submits(self):
-        if self.submit_counter == 3:
+        if self.submit_counter == 5:
             
             # Lay a button to nowhere over the submit button
             self.openFileButton = ttk.Button(self.calcs, text = 'Sorry, you have used all of your submissions.', style = "TButton")
@@ -755,15 +829,19 @@ class titrate:
                         
     def no_average_entered(self):
                 
-        messagebox.showinfo('Message', 'Did you mean to enter NA for moles KHP or average NaOH molarity?')
-       
+        messagebox.showinfo('Message', 'Did you mean to enter NA for your buret reading or average NaOH molarity? Your pH titration data cannot be graded without it!')
             
     def check_khp_answer(self):        
             
         messagebox.showinfo('Message', 'One or more of your answers for moles of KHP are >2% outside of the correct answer. Please try again.')
         
     def check_naoh_answer(self):
+        
         messagebox.showinfo('Message', 'Your average NaOH molarity is >2% outside of the correct answer. Please try again.')
+        
+    def check_pK_answer(self):
+        
+        messagebox.showinfo('Message', 'One or more of your answers for pKa are >2% outside of the correct answer. Please try again.')
         
 #----------------------------------------------------------------------------------------------
 
