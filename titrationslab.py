@@ -11,6 +11,7 @@ import glob, os
 import os.path
 from tkinter import messagebox
 import operator
+import csv
 
 
 
@@ -814,11 +815,43 @@ class titrate:
             # Lay a button to nowhere over the submit button
             self.openFileButton = ttk.Button(self.calcs, text = 'Sorry, you have used all of your submissions.', style = "TButton")
             self.openFileButton.grid(row = 20, column = 1, pady = (25, 5))
+            
+        self.create_report()
     
  
-    
+# Function to generate final report
+    def create_report(self):
+        
+        # Get student info
+        self.last_name = self.last.get()
+        self.first_name = self.first.get()
+        self.id = self.student_id.get()
+        
+        # Input pts possible
+        self.pts_possible = '20'
+        
+        # Build list with all info to be exported
+        self.report_list = [self.last_name, self.first_name, str(self.id), str(self.khp_pts), str(self.naoh_points), str(self.pK_pts), str(self.total_pts),
+                                    self.pts_possible]
+                                    
+        # Write to csv file
+        # Enter file path
+        self.path = '/Users/danfeldheim/Documents/'
+        self.file_name = self.last_name + '_' + self.first_name
+        
+        # Join path and file_name
+        self.path_and_file = os.path.join(self.path, self.file_name + '.csv')
+        
+        # Create list of column headers
+        self.headers = ['Last Name', 'First Name', 'id', 'KHP Points', 'NaOH Points', 'pKa Points', 'Total Points', 'Points Possible']
+        
+        # Write to csv. Use wb for python 2, w for python 3
+        with open(self.path_and_file, 'wb') as myfile: 
+            wr = csv.writer(myfile, quoting = csv.QUOTE_ALL)
+            wr.writerow(self.headers) 
+            wr.writerow(self.report_list)
        
-                   
+                    
                                
 #------------------------------------------------------------------------------------------------   
 # Define error messages
