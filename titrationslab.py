@@ -344,6 +344,15 @@ class titrate:
         self.avg_pka_entry.grid(row = 18, column = 1, columnspan = 2, pady = (1, 5))
         self.avg_pka.set('3.60') 
         
+        # Create pull down menu for student's choice for the unknown acid
+        self.student_guess = StringVar()
+        self.student_guess_label = ttk.Label(self.calcs, text = 'Unknown Acid:', background = 'blue', foreground = "blue", 
+            relief = RAISED, anchor = CENTER, width = 18, font = self.font2)
+        self.student_guess_label.grid(row = 19, column = 0, columnspan = 2, pady = (1, 5), padx = 3)
+        self.student_guess_box = ttk.Combobox(self.calcs, textvariable = self.student_guess, width = 8, font = self.font2)
+        self.student_guess_box.config(values = ('Acetic Acid', 'Formic Acid', 'HI', 'HBr', 'Carbonic', 'Propionic'))
+        self.student_guess_box.grid(row = 19, column = 1, columnspan = 2, pady = (1, 5), padx = 3)
+        
         
         # Create button that runs program
         self.openFileButton = ttk.Button(self.calcs, text = 'Submit for Grading', style = "TButton", command = lambda: self.get_values())
@@ -467,35 +476,26 @@ class titrate:
         
         self.mass_khp_list = [self.mass_khp1, self.mass_khp2, self.mass_khp3]
         
-        # Replace all NAs with 999.99 so the lists can be converted to float and dealt with
-        self.mass_khp_list = map(lambda x: str.replace(x, 'NA', '-999.99'), self.mass_khp_list)      
-        
-        # Convert all values to float
-        self.mass_khp_list = [float(i) for i in self.mass_khp_list]
-        
-        print('mass_khp_list:' + str(self.mass_khp_list))
-        print ('')
-        
-        # Loop through lists to calculate moles of khp 
         # Create list for results
-            
-        self.moles_khp_list = []
+        self.correct_moles_khp_list = []
         
         for mass in self.mass_khp_list:
-            self.moles_khp = mass/204.22
-            self.moles_khp_list.append(self.moles_khp)
-            
-        # Delete values <0 (by keeping values > 0)
-        # Give list a new name so moles_khp_list can be used to calc naoh molarity below
-        self.moles_khp_list_noNA = list(filter(lambda num: num > 0, self.moles_khp_list))
+            if mass == 'NA':
+                self.correct_moles_khp_list.append('NA')
+                print('mass khp = ' + mass)
+                print('')
+                
+            else:    
+                # Convert mass to float
+                mass = float(mass)
+          
+                # Calculate moles and append result to list
+                self.moles_khp = mass/204.22
+                self.correct_moles_khp_list.append(self.moles_khp)
         
-        print ('Moles khp before rounding: ' + str(self.moles_khp_list_noNA))
+        print ('Moles khp before rounding: ' + str(self.correct_moles_khp_list))
         print('')
         
-        # Round number in list to 5 decimals place
-        self.rounded_moles_khp_list = [round(i, 6) for i in self.moles_khp_list]
-        
-        print ('Moles khp: ' + str(self.rounded_moles_khp_list))
         
         self.calc_naoh_molarity()
         
@@ -513,47 +513,57 @@ class titrate:
         self.vi_list = [self.vi1, self.vi2, self.vi3]
         self.vf_list = [self.vf1, self.vf2, self.vf3]
         
-        # Replace NA with -999.99. This replaces NA with a float and keeps the lists the same length.
-        self.vi_list = map(lambda x: str.replace(x, 'NA', '-999.99'), self.vi_list)
-        self.vf_list = map(lambda x: str.replace(x, 'NA', '-999.99'), self.vf_list)
-        
-        # Convert to float
-        self.vi_list = [float(i) for i in self.vi_list]  
-        self.vf_list = [float(i) for i in self.vf_list]
-        
         # Calculate NaOH molarity for each trial and then average
         # Calculate Vf - Vi for each element in vi_list and vf_list and add to list
-        self.vol_diff_list = map(operator.sub, self.vf_list, self.vi_list)
         
-        print('Initial Volume Difference = ' + str(self.vol_diff_list))
+        # Create a volume difference list
+        self.vol_diff_list = []
+        
+        for initial_vol, final_vol in zip(self.vi_list, self.vf_list):
+            if initial_vol == 'NA' or final_vol == 'NA':
+                self.vol_diff_list.append('NA')
+                
+            else:
+                # Convert to float
+                initial_vol = float(initial_vol)
+                final_vol = float(final_vol)
+                # Take difference
+                self.vol_diff = final_vol - initial_vol
+                self.vol_diff_list.append(self.vol_diff)
+                
+        
+        print('Volume Difference = ' + str(self.vol_diff_list))
         print('')
         
-        # If vf and vi were NA, vf-vi = 0, which is a problem in the division below.
-        # Need to reset all 0 values to -999.99 by keeping values not = 0
-        self.vol_diff_list = list(filter(lambda num: num != 0, self.vol_diff_list))
-        
-        print('Volume difference - NA = ' + str(self.vol_diff_list))
-        print('')
-        
-        # Use zip to grab corresponding elements from vol and moles lists and calculate
+        # Use zip to grab corresponding elements from vol and moles lists and calculate NaOH molarity for each trial
         # Create a molarity list for results
         self.naoh_molarity_list = []
         
-        for moles, vol in zip(self.moles_khp_list, self.vol_diff_list):
-            self.molarity = 1000*(moles/vol)
-            self.naoh_molarity_list.append(self.molarity)    
+        for moles, vol in zip(self.correct_moles_khp_list, self.vol_diff_list):
+            
+            # If an element in either list contains NA, move on.
+            if moles == 'NA' or vol == 'NA':
+                
+                self.naoh_molarity_list.append('NA')
+                
+            else:
+            
+                self.molarity = 1000*(moles/vol)
+                self.naoh_molarity_list.append(self.molarity)    
                     
-        # Keep values > 0
-        self.naoh_molarity_list_noNA = list(filter(lambda num: num > 0, self.naoh_molarity_list))
-             
         # Calculate average and append to list
-        self.avg_naoh_molarity = sum(self.naoh_molarity_list_noNA)/len(self.naoh_molarity_list_noNA)
-        self.naoh_molarity_list_noNA.append(self.avg_naoh_molarity)
+        # Need to remove NA from list first
+        self.avg_naoh_list = self.naoh_molarity_list
+        while 'NA' in self.avg_naoh_list: self.avg_naoh_list.remove('NA')
+        self.avg_naoh_molarity = sum(self.avg_naoh_list)/len(self.avg_naoh_list)
+        
+        # Append the average to the original list self.naoh_molarity_list
+        self.naoh_molarity_list.append(self.avg_naoh_molarity)
         
         # Round values to 6 decimal places
-        self.rounded_naoh_molarity_list = [round(i, 6) for i in self.naoh_molarity_list_noNA]
+        # self.rounded_naoh_molarity_list = [round(i, 6) for i in self.naoh_molarity_list]
             
-        print('NaOH Molarity = ' + str(self.rounded_naoh_molarity_list))
+        print('NaOH Molarity = ' + str(self.naoh_molarity_list))
         print('')
         
         
@@ -590,7 +600,7 @@ class titrate:
             self.naoh_score()
         
         
-    # pKa
+    # pKa calculations
     # Formula: pKa = pH - log [B]/[A]
     # pH = self.quarter_Veq_pH, self.half_Veq_pH, and self.threeQuart_Veq_pH 
     def pka_calcs(self):
@@ -606,6 +616,7 @@ class titrate:
             
         else:
             self.pK1 = 'NA'
+            self.pKa_list.append(self.pK1)
             print('pKa 1/4 Veq not entered.')
             print('')
             
@@ -615,6 +626,7 @@ class titrate:
         
         else:
             self.pK2 = 'NA'
+            self.pKa_list.append(self.pK2)
             print('pKa 1/2 Veq not entered.')
             print('')
                   
@@ -624,6 +636,7 @@ class titrate:
             
         else:
             self.pK3 = 'NA'
+            self.pKa_list.append(self.pK3)
             print('pKa 3/4 Veq not entered.')
             print('')
         
@@ -634,14 +647,14 @@ class titrate:
         print ('pK 3/4 Veq = ' + str(self.pK3))
         print ('') 
         
-        # Calculate average pKa from pKa_list
-        self.pKa_avg = sum(self.pKa_list)/len(self.pKa_list)
+        # Remove NA so average pKa can be calculated
+        # Make a copy
+        self.pKa_list_noNA = self.pKa_list
+        while 'NA' in self.pKa_list_noNA: self.pKa_list_noNA.remove('NA') 
         
-        # Append average to pK list
-        self.pKa_list.append(self.pKa_avg)
+        # Calculate average 
+        self.pKa_avg = sum(self.pKa_list_noNA)/len(self.pKa_list_noNA)
         
-        # Round values to 2 decimal places
-        self.rounded_pKa_list = [round(i, 2) for i in self.pKa_list]
         
         self.pKa_score()
         
@@ -652,15 +665,9 @@ class titrate:
     def pKa_score(self):
         # Build a list of pKa values entered by student
         self.student_pKa_list = [self.quarter_pt, self.half_pt, self.three_pt, self.average_pka]
-        print ('Student pK list: ' + str(self.student_pKa_list))
-        print('')    
         
-        # Convert NA to -999.99. This is necessary in case a student entered NA in any of the pK boxes. 
-        # The -999.99 keeps the lists the same length.
-        self.student_pKa_replaced = map(lambda x: str.replace(x, 'NA', '-999.99'), self.student_pKa_list)
-        
-        print ('Student pKa replaced: ' + str(self.student_pKa_replaced))
-        print('')    
+        # Create a list of correct pKa values including NA values
+        self.correct_pKa_list = [self.pK1, self.pK2, self.pK3, self.pKa_avg]
         
         # Award 2 points for a each correct response
         # Pop up message if incorrect so they can try again
@@ -668,24 +675,30 @@ class titrate:
         # Start counter for khp points
         self.pK_pts = 0
         
-        for student_pK, correct_pK in zip(self.student_pKa_replaced, self.rounded_pKa_list):
+        # Create list for correct vs incorrect pKa responses
+        self.number_correct_pK = []
+        
+        for student_pK, correct_pK in zip(self.student_pKa_list, self.correct_pKa_list):
             
-            print('rounded pKa list: ' + str(self.rounded_pKa_list))
+            print('correct pKa list: ' + str(self.correct_pKa_list))
             print('')
-            print('student pKa: ' + str(self.student_pKa_replaced))
+            print('student pKa list: ' + str(self.student_pKa_list))
             print('')
             
-            # Convert student_pK to float
-            student_pK = float(student_pK)
             
             # If self.student_pK_replaced has -999.99 it in, move on
-            if student_pK == -999.99:
+            if student_pK == 'NA' or correct_pK == 'NA':
                 
                 print('Oops, this pKa answer was not submitted!')
                 
                 
             else:
+                # Convert student_pK to float
+                student_pK = float(student_pK)
                 
+                # Convert correct_pK to float
+                correct_pK = float(correct_pK)
+            
                 # Set upper and lower limits for correct answer
                 self.upper_pK = round(correct_pK + 0.02 * correct_pK, 2)
                 self.lower_pK = round(correct_pK - 0.02 * correct_pK, 2)
@@ -697,9 +710,15 @@ class titrate:
                 
                 if self.upper_pK >= student_pK >= self.lower_pK:
                     self.pK_pts += 2
+                    self.number_correct_pK.append('correct')
                         
                 else:
-                    self.check_pK_answer()
+                    self.number_correct_pK.append('incorrect')
+                    
+       
+        if 'incorrect' in self.number_correct_pK:
+            
+            self.check_pK_answer()
             
         
         self.naoh_score()
@@ -717,37 +736,30 @@ class titrate:
         print ('Student moles khp list: ' + str(self.student_moles_khp_list))
         print('')
             
-        # Convert NA to -999.99. This is necessary in case a student entered khp mass data for every trial,
-        # but for some reason entered NA in one of the khp moles boxes. The -999.99 keeps the lists the same length.
-        self.student_moles_khp_replaced = map(lambda x: str.replace(x, 'NA', '-999.99'), self.student_moles_khp_list)
-            
+        
         # Award 2 points for a each correct response
         # Pop up message if incorrect so they can try again
             
         # Start counter for khp points
         self.khp_pts = 0
+        
+        # Create list to track correct vs incorrect responses
+        self.number_correct_khp = []
            
-        for student_moles_khp, correct_moles_khp in zip(self.student_moles_khp_replaced, self.rounded_moles_khp_list):
+        for student_moles_khp, correct_moles_khp in zip(self.student_moles_khp_list, self.correct_moles_khp_list):
             
-            print('rounded moles khp list: ' + str(self.rounded_moles_khp_list))
-            print('')
-            print('student moles khp: ' + str(self.student_moles_khp_replaced))
-            print('')
-            
-            # Convert student_moles_khp to float
-            student_moles_khp = float(student_moles_khp)
-            
-            # If self.student_moles_khp_replaced has -999.99 it in, move on
-            if student_moles_khp == -999.99:
+            if student_moles_khp == 'NA' or correct_moles_khp == 'NA':
                 print('Oops, this answer was not submitted!')
-                
                 
             else:
                 
-                # Set upper and lower limits for correct answer
-                self.upper_khp = round(correct_moles_khp + 0.02 * correct_moles_khp, 6)
-                self.lower_khp = round(correct_moles_khp - 0.02 * correct_moles_khp, 6)
+                # Convert student_moles_khp and correct_moles_khp to float
+                student_moles_khp = float(student_moles_khp)
+                correct_moles_khp = float(correct_moles_khp)
                 
+                # Set upper and lower limits for correct answer
+                self.upper_khp = correct_moles_khp + 0.02 * correct_moles_khp
+                self.lower_khp = correct_moles_khp - 0.02 * correct_moles_khp
                 
                 print('upper correct_moles khp: ' + str(self.upper_khp))
                 print('')
@@ -756,10 +768,18 @@ class titrate:
                 
                 if self.upper_khp >= student_moles_khp >= self.lower_khp:
                     self.khp_pts += 2
+                    # Append correct to list
+                    self.number_correct_khp.append('correct')
                         
                 else:
-                    self.check_khp_answer()
-                    # break
+                    # Append incorrect to list
+                    self.number_correct_khp.append('incorrect')
+                    
+                    
+        # Check list for incorrect response and if present call popup
+        if 'incorrect' in self.number_correct_khp:
+            self.check_khp_answer()
+                    
         
     # Repeat for naoh
     
@@ -770,11 +790,9 @@ class titrate:
             
             self.student_naoh = float(self.naavg.get())
             
-            self.calculated_naoh = self.rounded_naoh_molarity_list[-1]
-            
-            # Calculate 2% above and below the calculated naoh molarity
-            self.lower_naoh = self.calculated_naoh - 0.02*self.calculated_naoh
-            self.upper_naoh = self.calculated_naoh + 0.02*self.calculated_naoh
+            # Calculate 2% above and below the calculated average naoh molarity
+            self.lower_naoh = self.avg_naoh_molarity - 0.02 * self.avg_naoh_molarity
+            self.upper_naoh = self.avg_naoh_molarity + 0.02 * self.avg_naoh_molarity
             
             # Award 6 points for a correct response, 1 point for incorrect response
             if self.lower_naoh < self.student_naoh < self.upper_naoh:
@@ -784,8 +802,64 @@ class titrate:
             
             print('NA entered for average NaOH molarity')
             
-        self.calculate_pts()
+        self.acid_prediction()
         
+        
+    # Function to check if they picked the right acid
+    def acid_prediction(self):
+        
+     # Get unkown from drop-down menu (A-F) and assign an acid   
+            
+        if self.unk.get() == 'A':
+            
+            self.unk_acid = 'Acetic Acid'
+                
+        elif self.unk.get() == 'B':
+                
+            self.unk_acid = 'Formic Acid'
+                    
+        elif self.unk.get() == 'C':
+                
+            self.unk_acid = 'HI'
+                
+        elif self.unk.get() == 'D':
+                
+            self.unk_acid = 'HBr'
+                
+        elif self.unk.get() == 'E':
+                
+            self.unk_acid = 'Carbonic'
+                
+        elif self.unk.get() == 'F':
+                
+            self.unk_acid = 'Propionic'
+            
+        else:
+            
+            self.no_unk_selected()
+            
+        print('unk acid: ' + self.unk_acid)
+                
+        # Get student's answer
+        # Start counter for points
+        self.unk_pts = 0
+            
+        # Get student's unknown guess
+        self.guess = self.student_guess.get()
+            
+        # Compare with correct unknown and give points for correct answer
+        if self.guess == '':
+            self.no_acid_guess_selected()
+        
+        elif self.guess == self.unk_acid:
+            self.unk_pts += 5
+                
+        else:
+            # Call message that the wrong acid was chosen
+            self.wrong_acid()
+                    
+            
+        self.calculate_pts()          
   
 # Function to add up all of the points
           
@@ -799,18 +873,21 @@ class titrate:
         
         print ('pKa points = ' + str(self.pK_pts))
         print('')
+        
+        print ('Determination of unknown = ' + str(self.unk_pts))
+        print('')
             
         # Calculate total points
-        self.total_pts = self.khp_pts + self.naoh_points + self.pK_pts
+        self.total_pts = self.khp_pts + self.naoh_points + self.pK_pts + self.unk_pts
             
         # Popup message for the number of points earned
-        messagebox.showinfo('Message', 'You earned ' + str(self.total_pts) + ' out of 20 points on the Titrations Lab!')
+        messagebox.showinfo('Message', 'You earned ' + str(self.total_pts) + ' out of 25 points on the Titrations Lab!')
             
         # Call function to check number of times student has pressed submit button
         self.check_submits()    
             
     def check_submits(self):
-        if self.submit_counter == 5:
+        if self.submit_counter == 3:
             
             # Lay a button to nowhere over the submit button
             self.openFileButton = ttk.Button(self.calcs, text = 'Sorry, you have used all of your submissions.', style = "TButton")
@@ -828,10 +905,10 @@ class titrate:
         self.id = self.student_id.get()
         
         # Input pts possible
-        self.pts_possible = '20'
+        self.pts_possible = '25'
         
         # Build list with all info to be exported
-        self.report_list = [self.last_name, self.first_name, str(self.id), str(self.khp_pts), str(self.naoh_points), str(self.pK_pts), str(self.total_pts),
+        self.report_list = [self.last_name, self.first_name, str(self.id), str(self.khp_pts), str(self.naoh_points), str(self.pK_pts), str(self.unk_pts), str(self.total_pts),
                                     self.pts_possible]
                                     
         # Write to csv file
@@ -843,7 +920,7 @@ class titrate:
         self.path_and_file = os.path.join(self.path, self.file_name + '.csv')
         
         # Create list of column headers
-        self.headers = ['Last Name', 'First Name', 'id', 'KHP Points', 'NaOH Points', 'pKa Points', 'Total Points', 'Points Possible']
+        self.headers = ['Last Name', 'First Name', 'id', 'KHP Points', 'NaOH Points', 'pKa Points', 'Unknown Determination', 'Total Points', 'Points Possible']
         
         # Write to csv. Use wb for python 2, w for python 3
         with open(self.path_and_file, 'wb') as myfile: 
@@ -875,6 +952,19 @@ class titrate:
     def check_pK_answer(self):
         
         messagebox.showinfo('Message', 'One or more of your answers for pKa are >2% outside of the correct answer. Please try again.')
+        
+    def no_unk_selected(self):
+        
+        messagebox.showinfo('Message', 'Please choose an unknown acid (A-F) from the drop-down menu.')
+        
+    def wrong_acid(self):
+        
+        messagebox.showinfo('Message', 'You chose the wrong acid. Please consider your pKa carefully and select again.')
+        
+    def no_acid_guess_selected(self):
+        
+        messagebox.showinfo('Message', 'Would you care to guess what your unknown acid is?')
+        
         
 #----------------------------------------------------------------------------------------------
 
