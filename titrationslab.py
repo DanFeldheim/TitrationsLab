@@ -10,7 +10,6 @@ import os.path
 import glob, os
 import os.path
 from tkinter import messagebox
-import operator
 import csv
 
 
@@ -893,7 +892,7 @@ class titrate:
             self.openFileButton = ttk.Button(self.calcs, text = 'Sorry, you have used all of your submissions.', style = "TButton")
             self.openFileButton.grid(row = 20, column = 1, pady = (25, 5))
             
-        self.create_report()
+        # self.create_report()
     
  
 # Function to generate final report
