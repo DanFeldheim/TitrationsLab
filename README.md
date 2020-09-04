@@ -1,4 +1,4 @@
-# TitrationsLab
+# Flask/Python Example-TitrationsLab
  Lab 3: titrations
  
  Students enter lab results and program automatically checks their answers and asigns a grade. 
