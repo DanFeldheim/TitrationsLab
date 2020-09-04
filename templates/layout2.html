@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>Titrations Lab</title>
+        <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
+    
+    <body>
+        <nav class="navbar navbar-expand-md navbar-default">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href = "/register">Register<span class="sr-only">(current)</span></a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href = "/login">Login</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href = "/enter_calculations">Enter Calculations</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href = "{{ url_for('logout') }}">Log Out</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class = "container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                        {% for message in messsages %}
+                            <div class = "alert alert-danger"div>
+                            <p> {{ message }} </p>
+                            </div>
+                        {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+        {% block content %}
+        {% endblock content %} 
+        
+        </div>
+            <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </body>
+</html>
+    

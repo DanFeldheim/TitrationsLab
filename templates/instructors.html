@@ -1,0 +1,55 @@
+{% extends 'layout2.html' %}
+
+{% block content %} 
+
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+      
+    <h1 class = "page-header" style = "color:blue;"> Welcome, {{ name }}</h1>
+    <br>   
+    <h2 style = "color:blue;">User List</h2>
+     <table style = "width:100%">
+        <col width = "10%">
+        <col width = "20%">
+        <col width = "30%">
+        <col width = "20%">
+        <col width = "20%">
+           
+        <tr>
+            <th style = "color:blue;">ID</th>
+            <th style = "color:blue;">Username</th>
+            <th style = "color:blue;">Email</th>
+            <th style = "color:blue;">Date Created</th>
+            <th style = "color:blue;">User Role</th>
+        </tr>
+    
+        {% for student in students %}
+        <tr>
+            <td style = "color:blue;">{{student.id}}</td>
+            <td style = "color:blue;">{{student.username}}</td>
+            <td style = "color:blue;">{{student.email}}</td>
+            <td style = "color:blue;">{{student.date_created}}</td>
+            <td style = "color:blue;">{{student.user_role}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <br>
+    <div class = "container" align = "left">
+        <a href = "/return_file/" target = "blank"><button class = 'btn btn-outline-primary'>
+        Download Grades</button></a>
+    </div>   
+    
+    <br>
+    <div class = "container" align = "left">
+        <a href = "/student_responses/" target = "blank"><button class = 'btn btn-outline-primary'>
+        Download Student Responses</button></a>
+    </div>   
+
+
+{% endblock content %}
+
+

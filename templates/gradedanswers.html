@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title style = "color:blue;">Titrations Lab Grading Summary</title>
+    </head>
+    
+    <body>
+    
+    <h1 style = "color:blue;">
+    Congratulations, you entered all of your data with the correct number of significant figures!
+    </h1>
+    <br>
+    <h1 style = "color:blue;">
+    Scoring Summary
+    </h1>
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 50%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    
+    <table style = "width:50%">
+        <col width = "60%">
+        <col width = "20%">
+        <col width = "20%">
+        
+        <tr>
+            <th>Category</th>
+            <th>Points</th>
+            <th>Points Possible</th>
+        </tr>
+        
+        
+        <tr>     
+            <th>Moles of KHP</th>       
+                <td>
+                    {{ khp_pts }} 
+                </td>
+                
+                <td>
+                    6 
+                </td>
+        </tr>
+        
+        <tr>     
+            <th>Average NaOH Molarity</th>       
+                <td>
+                    {{ naoh_pts }} 
+                </td>
+                
+                <td>
+                    6 
+                </td>
+        </tr>
+        
+         <tr>     
+            <th>Average pKa</th>       
+                <td>
+                    {{ pKa_pts }} 
+                </td>
+                
+                <td>
+                    8 
+                </td>
+        </tr>
+        
+        <tr>     
+            <th>Predicted Unknown Acid</th>       
+                <td>
+                    {{ acid_prediction_pts }} 
+                </td>
+                
+                <td>
+                    5 
+                </td>
+        </tr>
+    </table>
+          
+    <br>
+    <h3 style = "color:blue;">
+    Number of submissions remaining: {{ submissions_remaining }}
+    </h3>
+    
+    <h3 style = "color:blue;">
+    If you are happy with your score, please press the back arrow and logout.
+    </h3>
+    
+    <h3 style = "color:blue;">
+    If you wish to try again and have a submission remaining, please use the back arrow to return to the calculations page.
+    </h3>
+        
+        
+    </body>
+</html>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

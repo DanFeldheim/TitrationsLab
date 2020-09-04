@@ -1,0 +1,455 @@
+{% extends 'layout2.html' %}
+    
+{% block content %} 
+
+<!-- Standardization of NaOH -->
+
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    <h1 class = "page-header" style = "color:blue;"> Welcome, {{ name }}</h1>
+    <br>
+    <h2 style = "color:blue;">Enter Data For The Standardization of NaOH</h2>
+    <h3><font size = "4" style = "color:blue;">(Enter NA in place of missing data.)</font></h3>
+       
+    <table style = "width:100%">
+        <col width = "40%">
+        <col width = "20%">
+        <col width = "20%">
+        <col width = "20%">
+           
+        <tr>
+            <th>Quantity</th>
+            <th>Trial 1</th>
+            <th>Trial 2</th>
+            <th>Trial 3</th>
+        </tr>
+        
+        <tr>     
+            <th>grams KHP</th>
+            <form method = 'POST' action = "">
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group">
+                <td>
+                        <div class = "form-group">
+                        {{ form.khp1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.khp2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.khp3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>    
+            <th>Initial Volume (mL)</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+            
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+            </tr>
+            
+            <tr>    
+            <th>Final Volume (mL)</th> 
+            
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>   
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+           </tr> 
+        </fieldset>         
+    </table>
+    <br>
+    <!--
+    <div class = "form-group">
+        <input type = "submit" name = "submit1" value = "Check Significant Figures">
+    </div>
+    -->
+<!--  </form> -->
+
+<!-- Unkown Acid Titration -->
+
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    <br>
+    
+    <!-- 1st data table of Unkown Acid-->
+    <h2 style = "color:blue;">Enter Data For The Quick Trial (Color EndPoint)</h2>
+    <h3><font size = "4" style = "color:blue;">(Enter NA in place of missing data.)</font></h3>
+    
+    <table style = "width:100%">
+        <col width = "60%">
+        <col width = "40%">
+        <tr>
+            <th>Measurement</th>
+            <th>Value</th>
+            
+        </tr>
+        <tr>
+            <th>Volume of Acid Titrated (mL)</th>
+                
+                    <!-- <form method = 'POST' action = ""> -->
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group">
+                <td>
+                        <div class = "form-group">
+                        {{ form.voltitrated(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+            
+        <tr>    
+            <th>Initial Buret Reading (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.init_buret(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+        
+        <tr>    
+            <th>Buret Reading at Color Change (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.final_buret(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+                    
+    </table>
+    
+    <br>
+    <br>
+    
+    <!-- 2nd table -->
+    <h2 style = "color:blue;">Enter Data For The pH Titration</h2>
+    <table style = "width:100%">
+        <tr>
+            <th>Measurement</th>
+            <th>Value</th>
+        </tr>
+        
+        <tr>
+            <th>pH at 1/4 Equivalence Volume</th>
+                        
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.quarter_pt(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>    
+            <th>pH at 1/2 Equivalence Volume</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.half_pt (class = "form-control form-control-lg")}}
+                        </div>
+                </td>
+        </tr>
+            
+        <tr>    
+            <th>pH at 3/4 Equivalence Volume</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.threeQuarter_pt(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+        
+        <tr>    
+            <th>Volume NaOH to Reach Equivalence Point (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.equiv_volume(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+       
+        </fieldset>         
+    </table>   
+    <br>
+    
+    <!--
+    <div class = "form-group">
+        <input type = "submit" name = "submit2" value = "Check Significant Figures"> 
+    </div>
+    -->
+    
+ <!-- </form> -->
+
+
+<!-- Student Calculations -->
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    <br>
+    <h2 style = "color:blue;">Enter Calculations for the Standardization of NaOH (Color End Point)</h2>
+    
+    <table style = "width:100%">
+        <col width = "40%">
+        <col width = "20%">
+        <col width = "20%">
+        <col width = "20%">
+        <tr>
+            <th>Measurement</th>
+            <th>Trial 1</th>
+            <th>Trial 2</th>
+            <th>Trial 3</th>
+            
+        </tr>
+        <tr>
+            <th>Calculated Moles KHP</th>
+                
+                  <form method = 'POST' action = ""> 
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group">
+                <td>
+                        <div class = "form-group">
+                        {{ form.studentMolesKHP1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentMolesKHP2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentMolesKHP3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>Calculated NaOH Molarity (M)</th>
+                
+                    <!-- <form method = 'POST' action = ""> -->
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group"> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.studentNaohMolarity1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentNaohMolarity2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentNaohMolarity3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    
+    <h2 style = "color:blue;">Enter Calculations for the Titration of Unknown Weak Acid</h2>
+    <table style = "width:100%">
+        <col width = "60%">
+        <col width = "40%">
+        
+        <tr>
+            <th>Measurement</th>
+            <th>Value</th>  
+        </tr>
+        
+        <tr>
+            <th>Average NaOH Molarity</th>
+                
+                    <!-- <form method = 'POST' action = ""> -->
+                        {{ form.hidden_tag() }}
+                         <fieldset class = "form-group"> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.studentAverageNaohMolarity(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>Acid Molarity Based Upon the Color Endpoint</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentColorEndpointMolarity(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>Acid Molarity Based Upon the Accurate pH Titration</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentAccurateEndpointMolarity(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>pKa from the 1/4 Equivalence Volume</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentQuarterPointpK(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+         <tr>
+            <th>pKa from the 1/2 Equivalence Volume</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentHalfPointpK(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>pKa from the 3/4 Equivalence Volume</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentThreeQuarterPointpK(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>Average pKa</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.studentAveragepK(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <th>Unkown Acid Prediction <br /> 
+            (Acid Determined Experimentally)</th>
+            <!-- For a drop-down menu -->
+            <td>
+                <label for = "Predicted_acid">Predicted Acid:</label>
+                <select class = "u-full-width" name = "predicted">
+                    <option value = ""></option>
+                    <option value = "Acetic">Acetic</option>
+                    <option value = "Carbonic">Carbonic</option>
+                    <option value = "Propionoic">Propionoic</option>
+                </select>
+            </td>
+                
+        </tr>  
+        
+        <tr>
+            <th>Acid Assigned</th>
+            <!-- For a drop-down menu -->
+            <td>
+                <label for = "Unknown_acid">Acid Assigned:</label>
+                <select class = "u-full-width" name = "assigned">
+                    <option value = ""></option>
+                    <option value = "A">A</option>
+                    <option value = "B">B</option>
+                    <option value = "C">C</option>
+                    <option value = "D">D</option>
+                    <option value = "E">E</option>
+                    <option value = "F">F</option>
+                </select>
+            </td>
+        </tr>     
+    <fieldset> 
+ </table> 
+ <br>
+    <!--
+    <div class = "form-group">
+        <input type = "submit" name = "submit3" value = "Check Significant Figures">
+    </div>
+    -->
+    
+    <div class = "form-group">
+        <input type = "submit" style = "color:red;" name = "submit4" value = "Check Significant Figures and Submit For Grade">
+    </div>   
+
+</form>
+
+
+<!-- Button click     
+<body>
+    <a href = /compute><button type = ”button”>Submit For Grade</button></a>
+</body>            
+-->                  
+                             
+                                             
+
+{% endblock content %}

@@ -1,0 +1,150 @@
+{% extends 'layout.html' %}
+    
+{% block unknown %} 
+
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    <br>
+    
+    <!-- 1st data table -->
+    <h2>Enter Data For The Quick Trial (Color EndPoint)</h2>
+    <h3><font size = "4">(Enter NA in place of missing data.)</font></h3>
+    
+    <table style = "width:100%">
+        <col width = "60%">
+        <col width = "40%">
+        <tr>
+            <th>Measurement</th>
+            <th>Value</th>
+            
+        </tr>
+        <tr>
+            <th>Volume of Acid Titrated (mL)</th>
+                
+                    <form method = 'POST' action = "">
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group">
+                <td>
+                        <div class = "form-group">
+                        {{ form.voltitrated(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>    
+            <th>Unknown Acid (A, B, C...)</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.unknown_acid (class = "form-control form-control-lg")}}
+                        </div>
+                </td>
+        </tr>
+            
+        <tr>    
+            <th>Initial Buret Reading (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.init_buret(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+        
+        <tr>    
+            <th>Buret Reading at Color Change (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.final_buret(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+           
+          
+    </table>
+    
+    <br>
+    <br>
+    
+    <!-- 2nd table -->
+    <h2>Enter Data For The pH Titration</h2>
+    <table style = "width:100%">
+        <tr>
+            <th>Measurement</th>
+            <th>Value</th>
+        </tr>
+        
+        <tr>
+            <th>pH at 1/4 Equivalence Volume</th>
+                        
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.quarter_pt(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>    
+            <th>pH at 1/2 Equivalence Volume</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.half_pt (class = "form-control form-control-lg")}}
+                        </div>
+                </td>
+        </tr>
+            
+        <tr>    
+            <th>pH at 3/4 Equivalence Volume</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.threeQuarter_pt(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+        
+        <tr>    
+            <th>Volume NaOH to Reach Equivalence Point (mL)</th> 
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.equiv_volume(class = "form-control form-control-lg") }}
+                        </div>
+                </td>       
+        </tr> 
+       
+        </fieldset>         
+    </table>   
+    <br>
+    <div class = "form-group">
+        {{ form.submit(class = "btn btn-outline-info") }}
+    </div>
+</form> 
+
+
+{% endblock unknown %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

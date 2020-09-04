@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+    
+{% block naoh %} 
+
+    <style>
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+        th, td {padding: 15px;text-align: center;}
+        table#t01 {width: 100%; background-color: #f1f1c1;}
+    </style>
+    <br>
+    <br>
+    
+    <h2>Enter Data For The Standardization of NaOH</h2>
+    <h3><font size = "4">(Enter NA in place of missing data.)</font></h3>
+    
+    <table style = "width:100%">
+        <col width = "40%">
+        <col width = "20%">
+        <col width = "20%">
+        <col width = "20%">
+        
+        <tr>
+            <th>Quantity</th>
+            <th>Trial 1</th>
+            <th>Trial 2</th>
+            <th>Trial 3</th>
+        </tr>
+        <tr>
+            <th>grams KHP</th>
+                
+                    <form method = 'POST' action = "">
+                        {{ form.hidden_tag() }}
+                        <fieldset class = "form-group">
+                <td>
+                        <div class = "form-group">
+                        {{ form.khp1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.khp2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.khp3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+        </tr>
+        
+        <tr>    
+            <th>Initial Volume (mL)</th>
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+            
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.initvol3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+            </tr>
+            
+            <tr>    
+            <th>Final Volume (mL)</th> 
+            
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol1(class = "form-control form-control-lg") }}
+                        </div>
+                </td>   
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol2(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+                
+                <td>
+                        <div class = "form-group">
+                        {{ form.hidden_tag() }}
+                        {{ form.finalvol3(class = "form-control form-control-lg") }}
+                        </div>
+                </td>
+           </tr> 
+        </fieldset>         
+    </table>
+    <br>
+    <div class = "form-group">
+        {{ form.submit(class = "btn btn-outline-info") }}
+    </div>
+</form> 
+
+
+{% endblock naoh %}
